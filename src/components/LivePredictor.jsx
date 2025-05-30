@@ -70,6 +70,7 @@ function LivePredictor({ setMarkerCoords }) {
       );
       return;
     }
+
     setError("");
     setResult(null);
     setIsLoading(true);
@@ -78,28 +79,23 @@ function LivePredictor({ setMarkerCoords }) {
     );
 
     try {
-      const response = await fetch(
-        "https://aerocastai-backendv2-production.up.railway.app/predict",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            latitude: parseFloat(latitude),
-            longitude: parseFloat(longitude),
-          }),
-        }
-      );
+      const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitude: parseFloat(latitude),
+          longitude: parseFloat(longitude),
+        }),
+      });
 
       setIsLoading(false);
 
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({
-            detail: "Prediction request failed due to a server issue.",
-          }));
+        const errorData = await response.json().catch(() => ({
+          detail: "Prediction request failed due to a server issue.",
+        }));
         throw new Error(errorData.detail || "Prediction failed.");
       }
 
@@ -142,6 +138,7 @@ function LivePredictor({ setMarkerCoords }) {
           Live Tornado Predictor
         </h2>
 
+        {/* AI Message Area - Moved to top */}
         <div
           className={`mb-6 p-4 rounded-lg text-sm transition-all duration-300 ${
             isLoading
@@ -160,6 +157,7 @@ function LivePredictor({ setMarkerCoords }) {
           <p className="mt-1 ml-8">{aiMessage}</p>
         </div>
 
+        {/* Inputs */}
         <div className="space-y-4 mb-6">
           <input
             type="text"
@@ -179,6 +177,7 @@ function LivePredictor({ setMarkerCoords }) {
           />
         </div>
 
+        {/* Predict Button */}
         <button
           onClick={handlePredict}
           className="bg-gradient-to-r from-sky-600 to-teal-500 hover:from-sky-700 hover:to-teal-600 text-white font-bold py-3 px-6 rounded-lg w-full transition-all duration-300 ease-in-out transform hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-lg"
@@ -194,12 +193,14 @@ function LivePredictor({ setMarkerCoords }) {
           )}
         </button>
 
+        {/* Error Message */}
         {error &&
           !aiMessage.includes("encountered an issue") &&
           !aiMessage.includes("needs valid coordinates") && (
             <p className="text-red-400 mt-4 text-center">{error}</p>
           )}
 
+        {/* Result Output */}
         {result && !isLoading && (
           <div className="mt-8 bg-[#0d1d2b] p-6 rounded-lg border border-slate-700">
             <h3 className="text-xl font-semibold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-teal-200">
@@ -211,8 +212,8 @@ function LivePredictor({ setMarkerCoords }) {
               </p>
             )}
             <p className="mb-1">
-              <strong>Coordinates:</strong> {result.latitude.toFixed(4)},{" "}
-              {result.longitude.toFixed(4)}
+              <strong>Coordinates:</strong>{" "}
+              {result.latitude.toFixed(4)}, {result.longitude.toFixed(4)}
             </p>
             <p className="mb-1">
               <strong>Analysis Time:</strong>{" "}
@@ -257,8 +258,7 @@ function LivePredictor({ setMarkerCoords }) {
                   <strong>Precipitation:</strong> {result.precipitation} mm
                 </p>
                 <p>
-                  <strong>Apparent Temp:</strong>{" "}
-                  {result.apparent_temperature}°C
+                  <strong>Apparent Temp:</strong> {result.apparent_temperature}°C
                 </p>
               </div>
             </details>
