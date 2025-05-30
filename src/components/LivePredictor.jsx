@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-// Simple animated "thinking" icon (SVG) - represents AI processing
+// Simple animated "thinking" icon (SVG)
 const ThinkingIcon = () => (
   <svg
     width="24"
@@ -10,7 +10,6 @@ const ThinkingIcon = () => (
     xmlns="http://www.w3.org/2000/svg"
     className="animate-pulse inline-block mr-2"
   >
-    {/* Simple pulsing circle and lines */}
     <circle
       cx="12"
       cy="12"
@@ -61,7 +60,7 @@ function LivePredictor({ setMarkerCoords }) {
   const [isLoading, setIsLoading] = useState(false);
   const [aiMessage, setAiMessage] = useState(
     "Enter coordinates to get a live tornado risk assessment from AeroCastAI."
-  ); // Initial AI message
+  );
 
   const handlePredict = async () => {
     if (!latitude || !longitude) {
@@ -76,21 +75,24 @@ function LivePredictor({ setMarkerCoords }) {
     setIsLoading(true);
     setAiMessage(
       "AeroCastAI is analyzing the latest atmospheric conditions for your selected location..."
-    ); // AI "thinking"
+    );
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          latitude: parseFloat(latitude),
-          longitude: parseFloat(longitude),
-        }),
-      });
+      const response = await fetch(
+        "https://aerocastai-backendv2-production.up.railway.app/predict",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+          }),
+        }
+      );
 
-      setIsLoading(false); // Set loading to false once response is received
+      setIsLoading(false);
 
       if (!response.ok) {
         const errorData = await response
@@ -125,7 +127,7 @@ function LivePredictor({ setMarkerCoords }) {
         ]);
       }
     } catch (err) {
-      setIsLoading(false); // Ensure loading is false on error
+      setIsLoading(false);
       setError(err.message || "Failed to fetch prediction.");
       setAiMessage(
         "AeroCastAI encountered an issue while analyzing. Please check your input or try again shortly."
@@ -140,7 +142,6 @@ function LivePredictor({ setMarkerCoords }) {
           Live Tornado Predictor
         </h2>
 
-        {/* AI Message Area - Moved to top */}
         <div
           className={`mb-6 p-4 rounded-lg text-sm transition-all duration-300 ${
             isLoading
@@ -256,7 +257,8 @@ function LivePredictor({ setMarkerCoords }) {
                   <strong>Precipitation:</strong> {result.precipitation} mm
                 </p>
                 <p>
-                  <strong>Apparent Temp:</strong> {result.apparent_temperature}°C
+                  <strong>Apparent Temp:</strong>{" "}
+                  {result.apparent_temperature}°C
                 </p>
               </div>
             </details>
@@ -268,3 +270,4 @@ function LivePredictor({ setMarkerCoords }) {
 }
 
 export default LivePredictor;
+
