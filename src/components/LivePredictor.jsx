@@ -79,7 +79,7 @@ function LivePredictor({ setMarkerCoords }) {
     );
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/predict", {
+      const response = await fetch("https://aerocastapi-production.up.railway.app/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,7 +138,7 @@ function LivePredictor({ setMarkerCoords }) {
           Live Tornado Predictor
         </h2>
 
-        {/* AI Message Area - Moved to top */}
+        {/* AI Message Area */}
         <div
           className={`mb-6 p-4 rounded-lg text-sm transition-all duration-300 ${
             isLoading
@@ -221,9 +221,7 @@ function LivePredictor({ setMarkerCoords }) {
             </p>
             <p
               className={`mb-2 font-bold ${
-                result.prediction === 1
-                  ? "text-red-400"
-                  : "text-green-400"
+                result.prediction === 1 ? "text-red-400" : "text-green-400"
               }`}
             >
               <strong>Risk Assessment:</strong>{" "}
@@ -270,4 +268,3 @@ function LivePredictor({ setMarkerCoords }) {
 }
 
 export default LivePredictor;
-
