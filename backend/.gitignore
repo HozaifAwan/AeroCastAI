@@ -1,0 +1,18 @@
+# Ignore heavy files and venv
+tornado_data/*.csv
+*.db
+venv/
+__pycache__/
+*.pkl
+.venv/
+.env
+.env.*
+!.env.example
+.pytest_cache/
+*.pyc
+.coverage
+coverage/
+htmlcov/
+build/
+dist/
+*.egg-info/
